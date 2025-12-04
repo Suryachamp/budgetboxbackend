@@ -8,11 +8,12 @@ require("dotenv").config();
 -------------------------------------------- */
 
 // Database Connection
-const DATABASE_URL = process.env.DATABASE_URL;
+// We use the hardcoded URL as a fallback so you don't HAVE to set it in Render if you don't want to.
+const DATABASE_URL = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_zxcG7yqomle9@ep-twilight-king-ahgji1tp-pooler.c-3.us-east-1.aws.neon.tech/neondb";
 
 if (!DATABASE_URL) {
-    console.error("❌ DATABASE_URL is not set in environment variables!");
-    process.exit(1);
+    console.error("❌ DATABASE_URL is not set!");
+    // We don't exit here anymore, we let it try to connect (or fail gracefully later)
 }
 
 console.log("🔌 Connecting to database...");
@@ -20,7 +21,7 @@ console.log("🔌 Connecting to database...");
 const pool = new Pool({
     connectionString: DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false, // Often required for hosted Postgres like Neon
+        rejectUnauthorized: false, // Required for Neon DB
     },
 });
 
